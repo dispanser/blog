@@ -1,11 +1,10 @@
 ---
 layout: post
 title: First demo blog post!
-published: false
+published: true
 tags: demo markdown blog
 ---
 
 # Test Blog Entry
 
-
-Hello, anybody out there?
+publishing the unpublished...
