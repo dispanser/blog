@@ -131,7 +131,7 @@ distinct values in the indexed column.
 [cuckoo-paper]: https://www.cs.cmu.edu/~binfan/papers/conext14_cuckoofilter.pdf
 [cuckoo-brilliant]: https://brilliant.org/wiki/cuckoo-filter/
 
-![A single Cuckoo Filter with buckets for a value $x$](images/partition-index-intro/cuckoo_basic.png)
+![A single Cuckoo Filter with buckets for a value $x$](../images/partition-index-intro/cuckoo_basic.png)
 
 In the example above (TODO: verify image being in the right place, not true
 for pdf), we sketched a Cuckoo Filter with six buckets and two slots,
@@ -154,7 +154,7 @@ other hand, a small bucket size $b$ reduces the expected table occupancy.
 According to the [paper][cuckoo-paper], bucket sizes of $b = 1, 2, 4, 8$  lead
 to expected occupancies of $50\%, 84\%, 95\%$, and $98\%$ respectively.
 
-![Number of buckets impact $h_1(x)$ and $h_2(x)$](images/partition-index-intro/cuckoo_multiple_unaligned.png)
+![Number of buckets impact $h_1(x)$ and $h_2(x)$](../images/partition-index-intro/cuckoo_multiple_unaligned.png)
 
 The hash function that selects our candidate buckets depends on the number of
 buckets, which, for a fixed bucket size $b$, depends on the number of elements
@@ -172,7 +172,7 @@ filter individually.
 To overcome the irregularity of the data layout, we can try to keep the number
 of buckets per filter constant, which leads to a much more regular structure:
 
-![Cuckoo Filters with aligned bucket sizes](images/partition-index-intro/cuckoo_multiple_aligned.png)
+![Cuckoo Filters with aligned bucket sizes](../images/partition-index-intro/cuckoo_multiple_aligned.png)
 
 By requring all individual filters to have the same number of buckets, a few
 things happened:
@@ -205,7 +205,7 @@ partitions is in only two memory locations, each containing a long stream of
 fingerprints representing the data of a single bucket, but for all
 files or partitions:
 
-![Transposing the matrix: co-locating bucket data](images/partition-index-intro/cuckoo_aligned_transposed.png)
+![Transposing the matrix: co-locating bucket data](../images/partition-index-intro/cuckoo_aligned_transposed.png)
 
 
 ### Conclusion
@@ -313,7 +313,7 @@ benchmark on an index with $100k$ entries per partition, one million partitions,
 and a varying number of buckets ranging from 11000 to 68000. The resulting 
 buckets contain 10 million to two million fingerprints, respectively.
 
-![Bucket Size vs Latency](images/partition-index-intro/bucket_size_vs_latency.png)
+![Bucket Size vs Latency](../images/partition-index-intro/bucket_size_vs_latency.png)
 
 The linear relationship between bucket size and query latency is clearly
 visible in the plot. The number of buckets is inversely proportional to the
@@ -334,7 +334,7 @@ To see the effect of the number of buckets on the occupancy of the index,
 we created an index for a single partition with 100k elements, using buckets
 from $[100 .. 100k)$ in steps of $500$.
 
-![Buckets vs Occupancy](images/partition-index-intro/buckets_vs_occupancy.png)
+![Buckets vs Occupancy](../images/partition-index-intro/buckets_vs_occupancy.png)
 
 What's happening here is that incrementing the number of buckets makes
 occupancy worse until a point where the partition data can fit in one less
@@ -367,7 +367,7 @@ throughput (MB/s of data processed).
 We expect the latency to stay constant (each thread does the same work, after
 all), and the throughput to scale linearly with the number of threads.
 
-![Concurrent Query Execution: Where's my scale?](images/partition-index-intro/multi_threaded_behavior.png)
+![Concurrent Query Execution: Where's my scale?](../images/partition-index-intro/multi_threaded_behavior.png)
 
 This does not look good - query latency is not constant when executing multiple
 queries at the same time. To understand what's going on, we added two
@@ -398,7 +398,7 @@ also take a look at the false positive rate. As discussed previously, for a
 single cuckoo filter it's $\text{fp} = \frac{2 b}{2^{fb}}$, where $b$ is the.
 bucket size, and $fb$ is the number of bits of the fingerprints.
 
-![False positive rate](images/partition-index-intro/fp_rates.png)
+![False positive rate](../images/partition-index-intro/fp_rates.png)
 
 I was initially surprised by the fact that the actual false positive rate was
 _below_ the theoretical one, but later realized that the formula ignores vacant
