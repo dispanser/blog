@@ -5,23 +5,23 @@ geometry: margin=1cm
 output: pdf_document
 documentclass: extarticle
 fontsize: 17pt
+mathjax: yes
 ---
 
 # Efficient Execution of Point Queries in Large Tables
 
-## Meta (to be deleted)
+$$ \eps $$
 
-- Cuckoo Filters are introduced with "present our approach" - should they have a separate section?
+\\[ \sigma \\]
+
+\\( \delta \\)
+
+test
+
+TODO:
+
 - "data lake" is not actually a good term. A data lake is very different things to different people,
   so it would be great if we could come up with a more meaningful name.
-
-### Links
-
-https://arrow.apache.org/blog/2022/12/26/querying-parquet-with-millisecond-latency/
-<!-- https://www.influxdata.com/glossary/olap/ -->
-<!-- https://learn.microsoft.com/en-us/azure/architecture/best-practices/data-partitioning -->
-
-[parquet]: https://parquet.apache.org/
 
 ## Summary
 
@@ -40,22 +40,17 @@ needle-in-a-haystack queries by orders of magnitudes.
 
 ## Motivation
 
-<!-- state: tbd -->
+<!-- state: good, minus "data lakes" -->
 
 Data Lakes [TODO] provide efficient storage for large amounts of data
 leveraging columnar file formats like [parquet][parquet], and are often
 optimized for analytical queries and batch-processing of data.
 
-<!-- A columnar data representation allows higher compression ratios and reduces the -->
-<!-- number of I/O operations when the desired workload only reads a subset of the -->
-<!-- available columns. -->
-
 Due to efficient compression, storing data in a columnar format can also be
 attractive for data that does not actually fit the "analytical processing"
 paradigm, by reducing storage cost or making it possible to store data that
-would otherwise be economically infeasible. This includes network telemetry,
-structured service logs, or similar event-centric data that comes in large
-quantities.
+would otherwise be infeasible. This includes network telemetry, structured
+service logs, or similar event-centric data that comes in large quantities.
 
 Unfortunately, this type of data is often queried in ways that would be better
 served by a database, backed by an index: How do you find all the logs related
@@ -67,6 +62,8 @@ this typically involves optimizing the data layout for one or two specific
 types of queries from the get-go, and is not always practical if data is used
 for more than one purpose or queried on multiple columns.
 
+[parquet]: https://parquet.apache.org/
+
 ## Approximate Membership Query Filters
 
 [Bloom filters][wiki-bloom] and [related datastructures][wiki-amq] are a great
@@ -75,14 +72,14 @@ fit for this type of problem: a very compact representation of a set of values
 a value to either _maybe_ exist in a set or _definitely not_ exist in the set.
 
 By creating such a filter for every parquet file, it is possible to trim down
-the number of files to read by first consulting the filter.
-[Databricks][databricks-bloom] provides this feature by maintaining a separate
-index file per parquet file, and can skip reading irrelevant files
-alltogether. A similar approach is specified as [part][parquet-bloom] of the
-parquet format, where bloom index pages are maintained as part of the row group
-metadata of each parquet file. However, both approaches are tied to the parquet
-format. As these solutions maintain the index data in a one-to-one relationship
-with the associated parquet file, they require making one read request for each
+the number of files to read by first consulting the filter. Databricks provides
+this [feature][databricks-bloom] by maintaining a separate index file per
+parquet file, and can skip reading irrelevant files alltogether. A similar
+approach is specified as [part][parquet-bloom] of the parquet format, where
+bloom index pages are maintained as part of the row group metadata of each
+parquet file. However, both approaches are tied to the parquet format. As these
+solutions maintain the index data in a one-to-one relationship with the
+associated parquet file, they require making one read request for each
 candidate file, leading to excessive I/O if the initial set of candidate files
 is large.
 
